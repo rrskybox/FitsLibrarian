@@ -24,7 +24,6 @@ namespace FitsLibrarian
             EnabledHeaderFields.Clear();
             ColumnHeaders.Clear();
             LoadEnabledFields();
-            //Properties.Settings.Default.Save();
         }
 
         public static List<string> GetAllColumnHeaders()

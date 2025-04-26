@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
+using System.Reflection;
 
 namespace FitsLibrarian
 
@@ -13,11 +14,12 @@ namespace FitsLibrarian
     public partial class FormFitsLibrarian : Form
     {
 
-        //public FitsCatalogControl FitsCatalog;
-
         public FormFitsLibrarian()
         {
             InitializeComponent();
+            //Set window header with app name and version
+            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = string.Format("{3}, Version: {0}.{1}.{2}", ver.Major, ver.Minor, ver.Build, Assembly.GetEntryAssembly().GetName().Name);
             //Get files in directory tree
             if (Properties.Settings.Default.RootDirectory != "")
             {
@@ -244,7 +246,8 @@ namespace FitsLibrarian
             FormEditField eForm = new FormEditField(filePath, fieldName, oldValue);
             eForm.ShowDialog();
             this.FieldDataGrid.CurrentCell.Value = eForm.RevisedValue;
-            FitsFielder.ResetFielder();
+            // FitsFielder.ResetFielder();
+            InitializeGrid();
         }
     }
 

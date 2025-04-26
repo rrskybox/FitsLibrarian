@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFitsLibrarian));
             RootFolderDialog = new FolderBrowserDialog();
             treeView1 = new TreeView();
             label1 = new Label();
@@ -96,7 +97,6 @@
             FieldDataGrid.AllowUserToAddRows = false;
             FieldDataGrid.AllowUserToDeleteRows = false;
             FieldDataGrid.BackgroundColor = Color.DarkCyan;
-            FieldDataGrid.ForeColor = Color.Black;
             FieldDataGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             FieldDataGrid.Location = new Point(375, 41);
             FieldDataGrid.Name = "FieldDataGrid";
@@ -119,6 +119,7 @@
             Controls.Add(label1);
             Controls.Add(treeView1);
             ForeColor = Color.White;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "FormFitsLibrarian";
             Text = "Fits Librarian";
             ((System.ComponentModel.ISupportInitialize)FieldDataGrid).EndInit();

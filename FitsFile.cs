@@ -192,7 +192,12 @@ namespace FitsLibrarian
                     return (false);
                 }
             }
-            FitsHeaderList.Add(keyword + "=\' " + newval + " \'");
+            //Find the END field
+            int end = FitsHeaderList.FindIndex(s => s.StartsWith("END"));
+            if (end == -1)
+                 return false;
+            else
+                 FitsHeaderList.Insert(end, keyword + "=\' " + newval + " \'");
             return (true);
         }
 

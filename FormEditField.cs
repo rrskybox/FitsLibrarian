@@ -46,9 +46,11 @@ namespace FitsLibrarian
             if (AddRadioButton.Checked)
             {
                 FitsFile ff = new FitsFile(FitsFilePath);
-                ff.AddKey(FieldNameBox.Text, NewValueBox.Text);
-                ff.SaveFile();
-                RevisedValue = NewValueBox.Text;
+                if (ff.AddKey(FieldNameBox.Text, NewValueBox.Text))
+                {
+                    ff.SaveFile();
+                    RevisedValue = NewValueBox.Text;
+                }
             }
             if (DeleteRadioButton.Checked)
             {
