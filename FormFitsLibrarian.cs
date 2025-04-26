@@ -13,6 +13,7 @@ namespace FitsLibrarian
 {
     public partial class FormFitsLibrarian : Form
     {
+        private bool StartUpFlag = true;
 
         public FormFitsLibrarian()
         {
@@ -40,6 +41,7 @@ namespace FitsLibrarian
             //Clear the date grid rows and columns
             FieldDataGrid.Rows.Clear();
             FieldDataGrid.Columns.Clear();
+            FieldDataGrid.ForeColor = Color.Black;
 
             //Fill in selected types and fits data grid
             if (txtDirectoryPath.Text == "")
@@ -80,7 +82,7 @@ namespace FitsLibrarian
                 }
                 //Set the header of the row to the Filepath fpath
                 //Enter the stripped file path in the first column
-                FieldDataGrid.Rows[rowIndex].HeaderCell.Value = Path.GetFileNameWithoutExtension(fpath); 
+                FieldDataGrid.Rows[rowIndex].HeaderCell.Value = Path.GetFileNameWithoutExtension(fpath);
             }
 
             //Update the selected list with enabled fields which will hide or show columns accoringly
@@ -228,10 +230,14 @@ namespace FitsLibrarian
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            txtDirectoryPath.Text = treeView1.SelectedNode.Name;
-            //LoadDirectory(txtDirectoryPath.Text);
-            InitializeGrid();
-
+            if (!StartUpFlag)
+            {
+                txtDirectoryPath.Text = treeView1.SelectedNode.Name;
+                //LoadDirectory(txtDirectoryPath.Text);
+                InitializeGrid();
+            }
+            else
+                StartUpFlag = false;
         }
 
         private void FieldDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
