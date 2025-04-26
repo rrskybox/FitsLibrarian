@@ -12,27 +12,11 @@
     <Description>FITS File Header Editor</Description>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.7.0</AssemblyVersion>
+    <AssemblyVersion>1.0.10.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="favicon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\favicon.ico.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.deps.json.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.dll.config.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.dll.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.dll.manifest" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.exe.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\FitsLibrarian.runtimeconfig.json.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\Launcher.exe.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\Microsoft.Windows.SDK.NET.dll.deploy" />
-    <None Include="bin\publish\Application Files\FitsLibrarian_1_0_0_11\WinRT.Runtime.dll.deploy" />
-    <None Include="bin\publish\FitsLibrarian.application" />
-    <None Include="bin\publish\FitsLibrarianBuild7.zip" />
-    <None Include="bin\publish\setup.exe" />
   </ItemGroup>
 
   <ItemGroup>
