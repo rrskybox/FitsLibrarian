@@ -48,9 +48,10 @@
             // 
             treeView1.BackColor = Color.DarkCyan;
             treeView1.ForeColor = Color.White;
-            treeView1.Location = new Point(6, 36);
+            treeView1.Location = new Point(11, 77);
+            treeView1.Margin = new Padding(6, 6, 6, 6);
             treeView1.Name = "treeView1";
-            treeView1.Size = new Size(194, 364);
+            treeView1.Size = new Size(357, 772);
             treeView1.TabIndex = 2;
             treeView1.AfterSelect += treeView1_AfterSelect;
             // 
@@ -58,26 +59,29 @@
             // 
             label1.AutoSize = true;
             label1.ForeColor = Color.Black;
-            label1.Location = new Point(7, 11);
+            label1.Location = new Point(13, 23);
+            label1.Margin = new Padding(6, 0, 6, 0);
             label1.Name = "label1";
-            label1.Size = new Size(89, 15);
+            label1.Size = new Size(182, 32);
             label1.TabIndex = 3;
             label1.Text = "Select Directory";
             // 
             // txtDirectoryPath
             // 
-            txtDirectoryPath.Location = new Point(111, 8);
+            txtDirectoryPath.Location = new Point(206, 17);
+            txtDirectoryPath.Margin = new Padding(6, 6, 6, 6);
             txtDirectoryPath.Name = "txtDirectoryPath";
-            txtDirectoryPath.Size = new Size(615, 23);
+            txtDirectoryPath.Size = new Size(1139, 39);
             txtDirectoryPath.TabIndex = 4;
             // 
             // btnDirectoryPath
             // 
             btnDirectoryPath.BackColor = Color.Turquoise;
             btnDirectoryPath.ForeColor = Color.Black;
-            btnDirectoryPath.Location = new Point(733, 5);
+            btnDirectoryPath.Location = new Point(1361, 11);
+            btnDirectoryPath.Margin = new Padding(6, 6, 6, 6);
             btnDirectoryPath.Name = "btnDirectoryPath";
-            btnDirectoryPath.Size = new Size(65, 25);
+            btnDirectoryPath.Size = new Size(121, 53);
             btnDirectoryPath.TabIndex = 5;
             btnDirectoryPath.Text = "Browse";
             btnDirectoryPath.UseVisualStyleBackColor = false;
@@ -89,9 +93,10 @@
             FieldSelect.CheckOnClick = true;
             FieldSelect.ForeColor = Color.White;
             FieldSelect.FormattingEnabled = true;
-            FieldSelect.Location = new Point(206, 36);
+            FieldSelect.Location = new Point(383, 77);
+            FieldSelect.Margin = new Padding(6, 6, 6, 6);
             FieldSelect.Name = "FieldSelect";
-            FieldSelect.Size = new Size(155, 364);
+            FieldSelect.Size = new Size(284, 760);
             FieldSelect.TabIndex = 7;
             FieldSelect.SelectedIndexChanged += FieldSelect_SelectedIndexChanged;
             // 
@@ -112,14 +117,14 @@
             dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = Color.MintCream;
             dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = Color.Black;
+            dataGridViewCellStyle2.ForeColor = Color.White;
             dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             FieldDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
-            FieldDataGrid.Location = new Point(375, 41);
+            FieldDataGrid.Location = new Point(696, 87);
+            FieldDataGrid.Margin = new Padding(6, 6, 6, 6);
             FieldDataGrid.Name = "FieldDataGrid";
-            FieldDataGrid.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.MintCream;
             dataGridViewCellStyle3.Font = new Font("Segoe UI", 9F);
@@ -129,16 +134,20 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             FieldDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             FieldDataGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            FieldDataGrid.Size = new Size(994, 357);
+            FieldDataGrid.Size = new Size(1846, 762);
             FieldDataGrid.TabIndex = 9;
+            FieldDataGrid.EditMode = DataGridViewEditMode.EditOnKeystroke;
+            FieldDataGrid.CellClick += FieldDataGrid_CellClick;
             FieldDataGrid.CellDoubleClick += FieldDataGrid_CellDoubleClick;
+            FieldDataGrid.EditingControlShowing += FieldDataGrid_EditingControlShowing;
+            FieldDataGrid.CellEndEdit += FieldDataGrid_CellEndEdit;
             // 
             // FormFitsLibrarian
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightSeaGreen;
-            ClientSize = new Size(1381, 411);
+            ClientSize = new Size(2565, 877);
             Controls.Add(FieldDataGrid);
             Controls.Add(FieldSelect);
             Controls.Add(btnDirectoryPath);
@@ -147,6 +156,7 @@
             Controls.Add(treeView1);
             ForeColor = Color.White;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(6, 6, 6, 6);
             Name = "FormFitsLibrarian";
             Text = "Fits Librarian";
             ((System.ComponentModel.ISupportInitialize)FieldDataGrid).EndInit();

@@ -23,7 +23,7 @@ namespace FitsLibrarian
             FieldNameBox.Text = fieldName;
             FieldValueBox.Text = fieldValue;
             FitsFilePath = fPath;
-            RevisedValue = fieldValue;
+            RevisedValue = fieldValue ?? "";
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -34,15 +34,7 @@ namespace FitsLibrarian
 
         private void OkButton_Click(object sender, EventArgs e)
         {
-            //Modify, Add or Delete according to radio button
-            if (ChangeRadioButton.Checked)
-            {
-                //Update fits file with new field value
-                FitsFile ff = new FitsFile(FitsFilePath);
-                ff.ReplaceKey(FieldNameBox.Text, NewValueBox.Text);
-                ff.SaveFile();
-                RevisedValue = NewValueBox.Text;
-            }
+            //Add or Delete according to radio button
             if (AddRadioButton.Checked)
             {
                 FitsFile ff = new FitsFile(FitsFilePath);

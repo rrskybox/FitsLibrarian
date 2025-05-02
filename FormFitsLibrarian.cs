@@ -7,6 +7,8 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Runtime.CompilerServices;
 using System.Reflection;
+using Windows.ApplicationModel.VoiceCommands;
+using Windows.Storage;
 
 namespace FitsLibrarian
 
@@ -240,6 +242,37 @@ namespace FitsLibrarian
                 StartUpFlag = false;
         }
 
+
+        #region celledit
+
+        public string CurrentCellValue { get; set; }
+
+        private void FieldDataGrid_CellClick(object sender, DataGridViewCellEventArgs dgArgs)
+        {
+            CurrentCellValue = FieldDataGrid.CurrentCell.Value.ToString();
+            bool cellEditMode = FieldDataGrid.BeginEdit(false);
+        }
+
+        private void FieldDataGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            e.CellStyle.BackColor = Color.Aquamarine;
+
+            if (e.Control is DataGridViewTextBoxEditingControl tb)
+            {
+                tb.KeyDown -= dataGridView1_KeyDown;
+                tb.KeyDown += dataGridView1_KeyDown;
+            }
+        }
+
+        //then in your keydown event handler, execute your code
+        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                FieldDataGrid.EndEdit();
+            }
+        }
+
         private void FieldDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (this.FieldDataGrid.SelectedCells.Count > 1)
@@ -255,6 +288,28 @@ namespace FitsLibrarian
             // FitsFielder.ResetFielder();
             InitializeGrid();
         }
+
+        private void FieldDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs dgArgs)
+        {
+            string? fieldValue = this.FieldDataGrid.CurrentCell.Value.ToString();
+            if (fieldValue == CurrentCellValue)
+            {
+                return;
+            }
+            string? fieldName = FieldDataGrid.Columns[FieldDataGrid.CurrentCell.ColumnIndex].HeaderCell.Value.ToString();
+            string? fitsFileName = FieldDataGrid.Rows[FieldDataGrid.CurrentCell.RowIndex].HeaderCell.Value.ToString();
+            string? fitsFilePath = Properties.Settings.Default.RootDirectory + "\\" + fitsFileName + ".fit";
+            //Update fits file with new field value
+            DialogResult vResult = MessageBox.Show("Update FITS data?", "Verify Change", MessageBoxButtons.OKCancel);
+            if (vResult == DialogResult.OK)
+            {
+                FitsFile ff = new FitsFile(fitsFilePath);
+                ff.ReplaceKey(fieldName, fieldValue);
+                ff.SaveFile();
+            }
+        }
+
+        #endregion
     }
 
     #endregion
