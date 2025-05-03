@@ -16,6 +16,7 @@ namespace FitsLibrarian
     public partial class FormFitsLibrarian : Form
     {
         private bool StartUpFlag = true;
+        private List<string> FitsList = new List<string>();
 
         public FormFitsLibrarian()
         {
@@ -48,12 +49,12 @@ namespace FitsLibrarian
             //Fill in selected types and fits data grid
             if (txtDirectoryPath.Text == "")
                 return;
-            List<string> fitsList = Directory.GetFiles(txtDirectoryPath.Text, "*.fit?", SearchOption.AllDirectories).ToList();
-            if (fitsList.Count < 1)
+            FitsList = Directory.GetFiles(txtDirectoryPath.Text, "*.fit?", SearchOption.AllDirectories).ToList();
+            if (FitsList.Count < 1)
                 return;
-            if (fitsList.Count > 40)
+            if (FitsList.Count > 40)
             {
-                DialogResult dr = MessageBox.Show(fitsList.Count + " fits files have been found in this directory tree.  This could take awhile.  Continue?", "Large count check", MessageBoxButtons.OKCancel);
+                DialogResult dr = MessageBox.Show(FitsList.Count + " fits files have been found in this directory tree.  This could take awhile.  Continue?", "Large count check", MessageBoxButtons.OKCancel);
                 if (dr != DialogResult.OK)
                     return;
             }
@@ -61,7 +62,7 @@ namespace FitsLibrarian
             FitsFielder.LoadEnabledFields();
             // For each file compile the fits header data into the common field list and the column list
             int rowIndex = 0;
-            foreach (string fpath in fitsList)
+            foreach (string fpath in FitsList)
             {
                 //Read in the fits header to fill out common fields and common names
                 //  if the field is not currently in the common field list, then it
@@ -242,36 +243,63 @@ namespace FitsLibrarian
                 StartUpFlag = false;
         }
 
-
         #region celledit
 
         public string CurrentCellValue { get; set; }
+        public DataGridViewSelectedCellCollection SelectedGridCells { get; set; }
 
         private void FieldDataGrid_CellClick(object sender, DataGridViewCellEventArgs dgArgs)
         {
-            CurrentCellValue = FieldDataGrid.CurrentCell.Value.ToString();
+            SelectedGridCells = FieldDataGrid.SelectedCells;
+            CurrentCellValue = (FieldDataGrid.CurrentCell.Value ?? "").ToString();
             bool cellEditMode = FieldDataGrid.BeginEdit(false);
         }
 
         private void FieldDataGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.CellStyle.BackColor = Color.Aquamarine;
-
             if (e.Control is DataGridViewTextBoxEditingControl tb)
             {
-                tb.KeyDown -= dataGridView1_KeyDown;
-                tb.KeyDown += dataGridView1_KeyDown;
+                tb.KeyDown -= FieldDataGrid_KeyDown;
+                tb.KeyDown += FieldDataGrid_KeyDown;
             }
         }
 
         //then in your keydown event handler, execute your code
-        private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
+        private void FieldDataGrid_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
                 FieldDataGrid.EndEdit();
             }
         }
+
+        private void FieldDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs dgArgs)
+        {
+            string? fieldValue = (this.FieldDataGrid.CurrentCell.Value ?? "").ToString();
+            if (fieldValue == CurrentCellValue)
+            {
+                return;
+            }
+            string? fieldName = FieldDataGrid.Columns[FieldDataGrid.CurrentCell.ColumnIndex].HeaderCell.Value.ToString();
+            //Update fits file with new field value
+            DialogResult vResult = MessageBox.Show("Update FITS data?", "Verify Change", MessageBoxButtons.OKCancel);
+            if (vResult == DialogResult.OK)
+            {
+                foreach (DataGridViewCell dgvc in SelectedGridCells)
+                {
+                    int gridRow = dgvc.RowIndex;
+                    string? fitsFileName = FieldDataGrid.Rows[gridRow].HeaderCell.Value.ToString();
+                    string? fitsFilePath = FitsList[gridRow];
+                    FitsFile ff = new FitsFile(fitsFilePath);
+                    ff.ReplaceKey(fieldName, fieldValue);
+                    ff.SaveFile();
+                }
+            }
+            InitializeGrid();
+        }
+
+        #endregion
 
         private void FieldDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -289,27 +317,6 @@ namespace FitsLibrarian
             InitializeGrid();
         }
 
-        private void FieldDataGrid_CellEndEdit(object sender, DataGridViewCellEventArgs dgArgs)
-        {
-            string? fieldValue = this.FieldDataGrid.CurrentCell.Value.ToString();
-            if (fieldValue == CurrentCellValue)
-            {
-                return;
-            }
-            string? fieldName = FieldDataGrid.Columns[FieldDataGrid.CurrentCell.ColumnIndex].HeaderCell.Value.ToString();
-            string? fitsFileName = FieldDataGrid.Rows[FieldDataGrid.CurrentCell.RowIndex].HeaderCell.Value.ToString();
-            string? fitsFilePath = Properties.Settings.Default.RootDirectory + "\\" + fitsFileName + ".fit";
-            //Update fits file with new field value
-            DialogResult vResult = MessageBox.Show("Update FITS data?", "Verify Change", MessageBoxButtons.OKCancel);
-            if (vResult == DialogResult.OK)
-            {
-                FitsFile ff = new FitsFile(fitsFilePath);
-                ff.ReplaceKey(fieldName, fieldValue);
-                ff.SaveFile();
-            }
-        }
-
-        #endregion
     }
 
     #endregion
