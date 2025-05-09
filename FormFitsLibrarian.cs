@@ -250,9 +250,22 @@ namespace FitsLibrarian
 
         private void FieldDataGrid_CellClick(object sender, DataGridViewCellEventArgs dgArgs)
         {
-            SelectedGridCells = FieldDataGrid.SelectedCells;
-            CurrentCellValue = (FieldDataGrid.CurrentCell.Value ?? "").ToString();
-            bool cellEditMode = FieldDataGrid.BeginEdit(false);
+            //if (dgArgs.)
+            //If a whole row is selected (by picking the row header)
+            //then this is going to be an add or delete a whole field.
+            //If so, then launch FormEditField
+            int col = dgArgs.ColumnIndex;
+            int row = dgArgs.RowIndex;
+            if (dgArgs.ColumnIndex == -1) //Row Header Selected:  Add/Delete Fields
+                LaunchFormEditField();
+            else if (dgArgs.RowIndex == -1) //Column Header Selected:  Ignore
+                return;
+            else
+            {
+                SelectedGridCells = FieldDataGrid.SelectedCells;
+                CurrentCellValue = (FieldDataGrid.CurrentCell.Value ?? "").ToString();
+                bool cellEditMode = FieldDataGrid.BeginEdit(false);
+            }
         }
 
         private void FieldDataGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
@@ -290,8 +303,8 @@ namespace FitsLibrarian
                 {
                     int gridRow = dgvc.RowIndex;
                     string? fitsFileName = FieldDataGrid.Rows[gridRow].HeaderCell.Value.ToString();
-                    string? fitsFilePath = FitsList[gridRow];
-                    FitsFile ff = new FitsFile(fitsFilePath);
+                    string? fitsFullFilePath = FitsList.First(x => x.Contains(fitsFileName));
+                    FitsFile ff = new FitsFile(fitsFullFilePath);
                     ff.ReplaceKey(fieldName, fieldValue);
                     ff.SaveFile();
                 }
@@ -305,16 +318,40 @@ namespace FitsLibrarian
         {
             if (this.FieldDataGrid.SelectedCells.Count > 1)
                 return;
-            string? oldValue = this.FieldDataGrid.CurrentCell.Value.ToString();
+            else
+                LaunchFormEditField();
+        }
+
+        private void FieldDataGrid_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //Row header has been clicked on.  Launch Add/Delete Field
+
+        }
+
+        private void FieldDataGrid_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //Column header has been clicked on.  Launch Add/Delete Field
+
+        }
+
+        private void FieldDataGrid_ColumnHeaderMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //Column header has been double clicked on.  Launch Add/Delete Field
+
+        }
+
+        private void LaunchFormEditField()
+        {
             int fieldIdx = this.FieldDataGrid.CurrentCell.ColumnIndex;
             int fileIdx = this.FieldDataGrid.CurrentCell.RowIndex;
             string fieldName = this.FieldDataGrid.Columns[fieldIdx].HeaderText;
             string filePath = Properties.Settings.Default.RootDirectory + "\\" + this.FieldDataGrid.Rows[fileIdx].HeaderCell.Value.ToString() + ".fit";
-            FormEditField eForm = new FormEditField(filePath, fieldName, oldValue);
+            FormEditField eForm = new FormEditField(filePath, fieldName);
             eForm.ShowDialog();
             this.FieldDataGrid.CurrentCell.Value = eForm.RevisedValue;
             // FitsFielder.ResetFielder();
             InitializeGrid();
+
         }
 
     }

@@ -17,13 +17,13 @@ namespace FitsLibrarian
         public string FitsFilePath { get; set; } = string.Empty;
         public string RevisedValue { get; set; } = string.Empty;
 
-        public FormEditField(string fPath, string fieldName, string? fieldValue)
+        public FormEditField(string fPath, string fieldName)
         {
             InitializeComponent();
             FieldNameBox.Text = fieldName;
-            FieldValueBox.Text = fieldValue;
+            FieldValueBox.Text = "";
             FitsFilePath = fPath;
-            RevisedValue = fieldValue ?? "";
+            RevisedValue = "";
         }
 
         private void CancelButton_Click(object sender, EventArgs e)

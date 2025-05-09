@@ -135,6 +135,9 @@
             FieldDataGrid.CellDoubleClick += FieldDataGrid_CellDoubleClick;
             FieldDataGrid.CellEndEdit += FieldDataGrid_CellEndEdit;
             FieldDataGrid.EditingControlShowing += FieldDataGrid_EditingControlShowing;
+            FieldDataGrid.RowHeaderMouseClick += FieldDataGrid_RowHeaderMouseClick;
+            FieldDataGrid.ColumnHeaderMouseClick += FieldDataGrid_ColumnHeaderMouseClick;
+            FieldDataGrid.ColumnHeaderMouseDoubleClick += FieldDataGrid_ColumnHeaderMouseDoubleClick;
             // 
             // FormFitsLibrarian
             // 
