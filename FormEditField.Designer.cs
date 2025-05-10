@@ -32,8 +32,6 @@
             OkButton = new Button();
             CancelButton = new Button();
             label1 = new Label();
-            label2 = new Label();
-            FieldValueBox = new Label();
             label3 = new Label();
             NewValueBox = new TextBox();
             AddRadioButton = new RadioButton();
@@ -47,8 +45,8 @@
             // 
             OkButton.BackColor = Color.Honeydew;
             OkButton.ForeColor = Color.Black;
-            OkButton.Location = new Point(32, 356);
-            OkButton.Margin = new Padding(6, 6, 6, 6);
+            OkButton.Location = new Point(32, 310);
+            OkButton.Margin = new Padding(6);
             OkButton.Name = "OkButton";
             OkButton.Size = new Size(139, 49);
             OkButton.TabIndex = 0;
@@ -60,8 +58,8 @@
             // 
             CancelButton.BackColor = Color.Honeydew;
             CancelButton.ForeColor = Color.Black;
-            CancelButton.Location = new Point(357, 356);
-            CancelButton.Margin = new Padding(6, 6, 6, 6);
+            CancelButton.Location = new Point(357, 310);
+            CancelButton.Margin = new Padding(6);
             CancelButton.Name = "CancelButton";
             CancelButton.Size = new Size(139, 49);
             CancelButton.TabIndex = 1;
@@ -75,46 +73,27 @@
             label1.Location = new Point(32, 173);
             label1.Margin = new Padding(6, 0, 6, 0);
             label1.Name = "label1";
-            label1.Size = new Size(65, 32);
+            label1.Size = new Size(136, 32);
             label1.TabIndex = 2;
-            label1.Text = "Field";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(32, 226);
-            label2.Margin = new Padding(6, 0, 6, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(94, 32);
-            label2.TabIndex = 4;
-            label2.Text = "Current";
-            // 
-            // FieldValueBox
-            // 
-            FieldValueBox.AutoSize = true;
-            FieldValueBox.Location = new Point(199, 226);
-            FieldValueBox.Margin = new Padding(6, 0, 6, 0);
-            FieldValueBox.Name = "FieldValueBox";
-            FieldValueBox.Size = new Size(78, 32);
-            FieldValueBox.TabIndex = 5;
-            FieldValueBox.Text = "label2";
+            label1.Text = "Field Name";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(32, 282);
+            label3.Location = new Point(32, 236);
             label3.Margin = new Padding(6, 0, 6, 0);
             label3.Name = "label3";
-            label3.Size = new Size(62, 32);
+            label3.Size = new Size(127, 32);
             label3.TabIndex = 6;
-            label3.Text = "New";
+            label3.Text = "New Value";
             // 
             // NewValueBox
             // 
             NewValueBox.BackColor = Color.Honeydew;
+            NewValueBox.Enabled = false;
             NewValueBox.ForeColor = Color.Black;
-            NewValueBox.Location = new Point(199, 282);
-            NewValueBox.Margin = new Padding(6, 6, 6, 6);
+            NewValueBox.Location = new Point(199, 236);
+            NewValueBox.Margin = new Padding(6);
             NewValueBox.Name = "NewValueBox";
             NewValueBox.Size = new Size(292, 39);
             NewValueBox.TabIndex = 7;
@@ -130,6 +109,7 @@
             AddRadioButton.TabIndex = 9;
             AddRadioButton.Text = "Add";
             AddRadioButton.UseVisualStyleBackColor = true;
+            AddRadioButton.CheckedChanged += AddRadioButton_CheckedChanged;
             // 
             // DeleteRadioButton
             // 
@@ -142,6 +122,7 @@
             DeleteRadioButton.TabIndex = 10;
             DeleteRadioButton.Text = "Delete";
             DeleteRadioButton.UseVisualStyleBackColor = true;
+            DeleteRadioButton.CheckedChanged += DeleteRadioButton_CheckedChanged;
             // 
             // ModifyGroupBox
             // 
@@ -155,7 +136,7 @@
             ModifyGroupBox.Size = new Size(472, 113);
             ModifyGroupBox.TabIndex = 11;
             ModifyGroupBox.TabStop = false;
-            ModifyGroupBox.Text = "Modify";
+            ModifyGroupBox.Text = "Modify ";
             // 
             // FieldNameBox
             // 
@@ -172,22 +153,20 @@
             AutoScaleDimensions = new SizeF(13F, 32F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightSeaGreen;
-            ClientSize = new Size(524, 439);
+            ClientSize = new Size(524, 391);
             Controls.Add(FieldNameBox);
             Controls.Add(ModifyGroupBox);
             Controls.Add(NewValueBox);
             Controls.Add(label3);
-            Controls.Add(FieldValueBox);
-            Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(CancelButton);
             Controls.Add(OkButton);
             ForeColor = Color.White;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Margin = new Padding(6, 6, 6, 6);
+            Margin = new Padding(6);
             Name = "FormEditField";
-            Text = "Modify Heard Field";
+            Text = "Modify Header Field";
             ModifyGroupBox.ResumeLayout(false);
             ModifyGroupBox.PerformLayout();
             ResumeLayout(false);
@@ -199,8 +178,6 @@
         private Button OkButton;
         private Button CancelButton;
         private Label label1;
-        private Label label2;
-        private Label FieldValueBox;
         private Label label3;
         private TextBox NewValueBox;
         private RadioButton AddRadioButton;

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,16 +15,14 @@ namespace FitsLibrarian
     public partial class FormEditField : Form
     {
 
-        public string FitsFilePath { get; set; } = string.Empty;
-        public string RevisedValue { get; set; } = string.Empty;
+        public List<string> FitsFilePath { get; set; }
 
-        public FormEditField(string fPath, string fieldName)
+        public FormEditField(List<string> fPath)
         {
             InitializeComponent();
-            FieldNameBox.Text = fieldName;
-            FieldValueBox.Text = "";
             FitsFilePath = fPath;
-            RevisedValue = "";
+            FieldNameBox.Enabled = false;
+            NewValueBox.Enabled = false;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
@@ -37,22 +36,37 @@ namespace FitsLibrarian
             //Add or Delete according to radio button
             if (AddRadioButton.Checked)
             {
-                FitsFile ff = new FitsFile(FitsFilePath);
-                if (ff.AddKey(FieldNameBox.Text, NewValueBox.Text))
+                foreach (string filePath in FitsFilePath)
                 {
-                    ff.SaveFile();
-                    RevisedValue = NewValueBox.Text;
+                    FitsFile ff = new FitsFile(filePath);
+                    if (ff.AddKey(FieldNameBox.Text, NewValueBox.Text))
+                    {
+                        ff.SaveFile();
+                    }
                 }
             }
             if (DeleteRadioButton.Checked)
             {
-                FitsFile ff = new FitsFile(FitsFilePath);
-                ff.DeleteKey(FieldNameBox.Text);
-                ff.SaveFile();
-                RevisedValue = null;
-
+                foreach (string filePath in FitsFilePath)
+                {
+                    FitsFile ff = new FitsFile(filePath);
+                    ff.DeleteKey(FieldNameBox.Text);
+                    ff.SaveFile();
+                }
             }
             Close();
+        }
+
+        private void AddRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            NewValueBox.Enabled = true;
+            FieldNameBox.Enabled = true;
+        }
+
+        private void DeleteRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            NewValueBox.Enabled = false;
+            FieldNameBox.Enabled = true;
         }
     }
 }

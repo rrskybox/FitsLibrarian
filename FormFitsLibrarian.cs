@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Reflection;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
+using System.Diagnostics.Eventing.Reader;
 
 namespace FitsLibrarian
 
@@ -31,11 +32,11 @@ namespace FitsLibrarian
                 LoadDirectory(txtDirectoryPath.Text);
                 InitializeGrid();
             }
-
+            treeView1.ExpandAll();
             Show();
         }
 
-        private void InitializeGrid()
+        private void InitializeGrid(string singleFilePath = "")
         {
             //Create User control
 
@@ -48,8 +49,9 @@ namespace FitsLibrarian
 
             //Fill in selected types and fits data grid
             if (txtDirectoryPath.Text == "")
-                return;
-            FitsList = Directory.GetFiles(txtDirectoryPath.Text, "*.fit?", SearchOption.AllDirectories).ToList();
+                FitsList = new List<string>() { singleFilePath };
+            else
+                FitsList = Directory.GetFiles(txtDirectoryPath.Text, "*.fit?", SearchOption.AllDirectories).ToList();
             if (FitsList.Count < 1)
                 return;
             if (FitsList.Count > 40)
@@ -236,8 +238,14 @@ namespace FitsLibrarian
             if (!StartUpFlag)
             {
                 txtDirectoryPath.Text = treeView1.SelectedNode.Name;
-                //LoadDirectory(txtDirectoryPath.Text);
-                InitializeGrid();
+                if (txtDirectoryPath.Text == "")
+                {
+                    string rootPath = Properties.Settings.Default.RootDirectory;
+                    string treePath = Directory.GetFiles(rootPath, "*.fit", SearchOption.AllDirectories).First(x => x.Contains(treeView1.SelectedNode.FullPath));
+                    InitializeGrid(treePath);
+                }
+                else
+                    InitializeGrid();
             }
             else
                 StartUpFlag = false;
@@ -256,8 +264,23 @@ namespace FitsLibrarian
             //If so, then launch FormEditField
             int col = dgArgs.ColumnIndex;
             int row = dgArgs.RowIndex;
-            if (dgArgs.ColumnIndex == -1) //Row Header Selected:  Add/Delete Fields
-                LaunchFormEditField();
+            if (col == -1 && row == -1) //Add or Delete Field in all files
+            {
+                List<string> filePathList = FitsList;
+                FormEditField eForm = new FormEditField(filePathList);
+                eForm.ShowDialog();
+                InitializeGrid();
+            }
+            else if (dgArgs.ColumnIndex == -1) //Row Header Selected:  Add/Delete Fields
+            {
+                List<string> filePathList = new List<string>();
+                string fitsFileName = FieldDataGrid.Rows[row].HeaderCell.Value.ToString();
+                string fullFilePath = FitsList.First(x => x.Contains(fitsFileName));
+                filePathList.Add(fullFilePath);
+                FormEditField eForm = new FormEditField(filePathList);
+                eForm.ShowDialog();
+                InitializeGrid();
+            }
             else if (dgArgs.RowIndex == -1) //Column Header Selected:  Ignore
                 return;
             else
@@ -271,6 +294,7 @@ namespace FitsLibrarian
         private void FieldDataGrid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             e.CellStyle.BackColor = Color.Aquamarine;
+            ColorSelectedCells(SelectedGridCells, Color.Green);
             if (e.Control is DataGridViewTextBoxEditingControl tb)
             {
                 tb.KeyDown -= FieldDataGrid_KeyDown;
@@ -316,10 +340,11 @@ namespace FitsLibrarian
 
         private void FieldDataGrid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (this.FieldDataGrid.SelectedCells.Count > 1)
-                return;
-            else
-                LaunchFormEditField();
+            return;
+            //if (this.FieldDataGrid.SelectedCells.Count > 1)
+            //    return;
+            //else
+            //    LaunchFormEditField();
         }
 
         private void FieldDataGrid_RowHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -340,18 +365,9 @@ namespace FitsLibrarian
 
         }
 
-        private void LaunchFormEditField()
+        private void ColorSelectedCells(DataGridViewSelectedCellCollection dgvCells, Color color)
         {
-            int fieldIdx = this.FieldDataGrid.CurrentCell.ColumnIndex;
-            int fileIdx = this.FieldDataGrid.CurrentCell.RowIndex;
-            string fieldName = this.FieldDataGrid.Columns[fieldIdx].HeaderText;
-            string filePath = Properties.Settings.Default.RootDirectory + "\\" + this.FieldDataGrid.Rows[fileIdx].HeaderCell.Value.ToString() + ".fit";
-            FormEditField eForm = new FormEditField(filePath, fieldName);
-            eForm.ShowDialog();
-            this.FieldDataGrid.CurrentCell.Value = eForm.RevisedValue;
-            // FitsFielder.ResetFielder();
-            InitializeGrid();
-
+            foreach (DataGridViewCell cell in dgvCells) FieldDataGrid.Rows[cell.RowIndex].Cells[cell.ColumnIndex].Style.BackColor = color;
         }
 
     }

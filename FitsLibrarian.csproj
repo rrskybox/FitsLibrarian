@@ -12,7 +12,7 @@
     <Description>FITS File Header Editor</Description>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.24.0</AssemblyVersion>
+    <AssemblyVersion>1.0.25.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
