@@ -169,6 +169,7 @@ namespace FitsLibrarian
             {
                 MessageBox.Show("Select Directory!!");
             }
+            treeView1.ExpandAll();
             return;
         }
 
