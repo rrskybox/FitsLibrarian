@@ -10,6 +10,10 @@ using System.Reflection;
 using Windows.ApplicationModel.VoiceCommands;
 using Windows.Storage;
 using System.Diagnostics.Eventing.Reader;
+using AstroImage;
+using System.Diagnostics;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System;
 
 namespace FitsLibrarian
 
@@ -251,6 +255,16 @@ namespace FitsLibrarian
             else
                 StartUpFlag = false;
         }
+        
+        private void TreeView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            string rootPath = Properties.Settings.Default.RootDirectory;
+            string selectedPath = Directory.GetFiles(rootPath, "*.fit", SearchOption.AllDirectories).First(x => x.Contains(treeView1.SelectedNode.FullPath));
+            ProcessStartInfo startInfo = new ProcessStartInfo() { FileName = selectedPath, UseShellExecute = true };
+            Process.Start(startInfo);
+        }
+
+
 
         #region celledit
 

@@ -1,21 +1,25 @@
-﻿using System;
+﻿using AstroImage;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Text;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FitsLibrarian
 {
     public class FitsFile
     {
+        public ushort[] FitsVector = new ushort[0];
+        public ushort[,] FitsArray = new ushort[0, 0];
+        public Bitmap[] FitsBitMap = new Bitmap[0];
+
         byte[] headerRecord = new byte[80];
         byte[] dataUnit = new byte[2880];
 
-        //private UInt16[,] FITSArray;
-
         private List<string> FitsHeaderList = new List<string>();
-
-        const int ImageHeaderLength = 56 + (256 * 4);
 
         public string FilePath { get; set; }
         public List<FitsHeaderField> FieldList = new List<FitsHeaderField>();
@@ -24,7 +28,7 @@ namespace FitsLibrarian
         /// Class instantiation -- opens and parses fits file
         /// </summary>
         /// <param name="filepath"></param>
-        public FitsFile(string filepath)
+        public FitsFile(string filepath, bool readData = false)
         {
             //Opens file set by filepath (assumes it's a FITS formatted file)
             //Reads in header in 80 character strings, while ("END" is found
@@ -43,9 +47,7 @@ namespace FitsLibrarian
                     return;
                 FitsHeaderList.Add(System.Text.Encoding.ASCII.GetString(headerRecord));
             } while (!FitsHeaderList.Last().StartsWith("END "));
-
-            fitsFileStream.Close();
-
+            //Parse the field name/field data values out of each line and create tables
             foreach (string keyline in FitsHeaderList)
             {
                 //Read each line and parse out the fits field name and fits field data
@@ -58,6 +60,11 @@ namespace FitsLibrarian
                     FieldList.Add(fdf);
                 }
             }
+            //If the read data flag has been set, then parse the fits data component into a vector and array of ushorts
+            if (readData)
+                ReadFitsData(fitsFileStream);
+            //All done -- close up file stream
+            fitsFileStream.Close();
         }
 
         /// <summary>
@@ -195,9 +202,9 @@ namespace FitsLibrarian
             //Find the END field
             int end = FitsHeaderList.FindIndex(s => s.StartsWith("END"));
             if (end == -1)
-                 return false;
+                return false;
             else
-                 FitsHeaderList.Insert(end, keyword + "=\' " + newval + " \'");
+                FitsHeaderList.Insert(end, keyword + "=\' " + newval + " \'");
             return (true);
         }
 
@@ -237,7 +244,63 @@ namespace FitsLibrarian
 
         }
 
+        public void ReadFitsData(FileStream fs)
+        {
+            int Xaxis = Convert.ToInt32(ReadKey("NAXIS1"));
+            int Yaxis = Convert.ToInt32(ReadKey("NAXIS2"));
+
+            int bCount;
+            int num = Xaxis * Yaxis;
+            int num2 = 0;
+            int xaxis = Xaxis;
+            int yaxis = Yaxis;
+            Array.Resize(ref FitsVector, num);
+            int num3 = 0;
+            int num4 = 0;
+            do
+            {
+                bCount = fs.Read(dataUnit, 0, 2880);
+                for (int j = 0; j <= bCount - 1; j += 2)
+                {
+                    if (num2 < num)
+                    {
+                        ushort num5 = TwosComplementBytesToInteger(dataUnit[j], dataUnit[j + 1]);
+                        FitsVector[num2] = num5;
+                    }
+
+                    num2++;
+                    num3++;
+                    if (num3 >= xaxis)
+                    {
+                        num4++;
+                        num3 = 0;
+                    }
+                }
+            } while (bCount != 0);
+
+            FitsArray = new ushort[Xaxis, Yaxis];
+            for (int k = 0; k < Yaxis; k++)
+            {
+                for (int l = 0; l < Xaxis; l++)
+                {
+                    FitsArray[l, k] = (ushort)FitsVector[l + k * Xaxis];
+                }
+            }
+        }
+
+        private ushort TwosComplementBytesToInteger(ushort highbyte, ushort lowbyte)
+        {
+            return (ushort)Math.Min(((short)((highbyte << 8) + lowbyte) + 32768) / 256, 255);
+        }
+
+        public Bitmap GetImageBitmap()
+        {
+            Histogram hg = new Histogram(ref FitsVector);
+            return hg.NormalStretch(ref FitsArray, Convert.ToInt16(ReadKey("NAXIS1")), Convert.ToInt16(ReadKey("NAXIS2")));
+        }
+
     }
+
     public struct FitsHeaderField
     {
         public string FieldName;

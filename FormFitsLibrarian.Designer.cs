@@ -53,6 +53,7 @@
             treeView1.Size = new Size(194, 364);
             treeView1.TabIndex = 2;
             treeView1.AfterSelect += treeView1_AfterSelect;
+            treeView1.MouseDoubleClick += TreeView1_MouseDoubleClick;
             // 
             // label1
             // 
@@ -91,7 +92,7 @@
             FieldSelect.FormattingEnabled = true;
             FieldSelect.Location = new Point(206, 36);
             FieldSelect.Name = "FieldSelect";
-            FieldSelect.Size = new Size(155, 346);
+            FieldSelect.Size = new Size(155, 364);
             FieldSelect.TabIndex = 7;
             FieldSelect.SelectedIndexChanged += FieldSelect_SelectedIndexChanged;
             // 
@@ -118,7 +119,7 @@
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
             FieldDataGrid.DefaultCellStyle = dataGridViewCellStyle2;
             FieldDataGrid.EditMode = DataGridViewEditMode.EditOnKeystroke;
-            FieldDataGrid.Location = new Point(375, 41);
+            FieldDataGrid.Location = new Point(375, 36);
             FieldDataGrid.Name = "FieldDataGrid";
             dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = Color.MintCream;
@@ -129,22 +130,22 @@
             dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
             FieldDataGrid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             FieldDataGrid.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            FieldDataGrid.Size = new Size(994, 357);
+            FieldDataGrid.Size = new Size(807, 362);
             FieldDataGrid.TabIndex = 9;
             FieldDataGrid.CellClick += FieldDataGrid_CellClick;
             FieldDataGrid.CellDoubleClick += FieldDataGrid_CellDoubleClick;
             FieldDataGrid.CellEndEdit += FieldDataGrid_CellEndEdit;
-            FieldDataGrid.EditingControlShowing += FieldDataGrid_EditingControlShowing;
-            FieldDataGrid.RowHeaderMouseClick += FieldDataGrid_RowHeaderMouseClick;
             FieldDataGrid.ColumnHeaderMouseClick += FieldDataGrid_ColumnHeaderMouseClick;
             FieldDataGrid.ColumnHeaderMouseDoubleClick += FieldDataGrid_ColumnHeaderMouseDoubleClick;
+            FieldDataGrid.EditingControlShowing += FieldDataGrid_EditingControlShowing;
+            FieldDataGrid.RowHeaderMouseClick += FieldDataGrid_RowHeaderMouseClick;
             // 
             // FormFitsLibrarian
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.LightSeaGreen;
-            ClientSize = new Size(1381, 411);
+            ClientSize = new Size(1194, 411);
             Controls.Add(FieldDataGrid);
             Controls.Add(FieldSelect);
             Controls.Add(btnDirectoryPath);

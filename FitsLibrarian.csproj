@@ -12,11 +12,25 @@
     <Description>FITS File Header Editor</Description>
     <ApplicationIcon>favicon.ico</ApplicationIcon>
     <PackageIcon>favicon.ico</PackageIcon>
-    <AssemblyVersion>1.0.25.0</AssemblyVersion>
+    <AssemblyVersion>1.0.36.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CSharpFITS" Version="1.1.0" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AstroImage">
+      <HintPath>..\..\CS Projects\AstroImage\AstroImage\bin\Release\AstroImage.dll</HintPath>
+    </Reference>
+    <Reference Include="AstroMath">
+      <HintPath>..\..\CS Projects\AstroMath\AstroMath\bin\Release\AstroMath.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
